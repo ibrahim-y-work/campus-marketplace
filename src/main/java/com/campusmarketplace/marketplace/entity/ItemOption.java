@@ -3,6 +3,9 @@ package com.campusmarketplace.marketplace.entity;
 import com.campusmarketplace.marketplace.enums.ItemOptionStatus;
 import com.campusmarketplace.marketplace.enums.OptionType;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,6 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name="item_options")
+@EntityListeners(AuditingEntityListener.class)
 public class ItemOption {
 
     @Id
@@ -32,9 +36,11 @@ public class ItemOption {
     @Column(name="price")
     private BigDecimal price;
 
+    @CreatedDate
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
 

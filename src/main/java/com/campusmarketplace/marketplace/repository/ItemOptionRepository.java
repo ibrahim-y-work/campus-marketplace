@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 public interface ItemOptionRepository  extends JpaRepository<ItemOption, UUID> {
+    boolean existsById(UUID id);
 }
