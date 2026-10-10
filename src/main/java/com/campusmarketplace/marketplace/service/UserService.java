@@ -5,6 +5,7 @@ import com.campusmarketplace.marketplace.entity.User;
 import com.campusmarketplace.marketplace.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class UserService {
         realUser.setPhone(user.getPhone());
         return realUser;
     }
+    @Transactional
     public User addUser(UserRegistrationRequest user) {
         // email must be unique
         if(userRepository.existsByEmail(user.getEmail())) {
@@ -42,6 +44,7 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
+    @Transactional
     public void deleteUser(UUID id){
         if(!userRepository.existsById(id)) {
             throw new RuntimeException("User with this ID does not exist");
@@ -50,6 +53,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
     public User updateUser(UUID id, UserRegistrationRequest request){
         User existingUser=userRepository.findById(id).orElseThrow(()->new RuntimeException("User with this ID does not exist"));
 
@@ -69,6 +73,8 @@ public class UserService {
         return userRepository.save(existingUser);
 
     }
+
+    @Transactional(readOnly = true)
     public User getUserById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("This user doesn't exist"));

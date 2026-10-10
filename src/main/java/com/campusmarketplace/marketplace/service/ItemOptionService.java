@@ -7,6 +7,7 @@ import com.campusmarketplace.marketplace.repository.ItemOptionRepository;
 import com.campusmarketplace.marketplace.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -16,11 +17,11 @@ public class ItemOptionService {
     private final ItemRepository itemRepository;
 
     @Autowired
-
     public ItemOptionService(ItemOptionRepository optionRepository, ItemRepository itemRepository) {
         this.optionRepository = optionRepository;
         this.itemRepository = itemRepository;
     }
+
     private ItemOption convertDTOToItemOption(ItemOptionRegistrationRequest request){
         Item item=itemRepository.findById(request.getItemId())
                 .orElseThrow(()->
@@ -35,12 +36,14 @@ public class ItemOptionService {
         return option;
     }
 
+    @Transactional
     public ItemOption addItemOption(ItemOptionRegistrationRequest request){
         ItemOption option=convertDTOToItemOption(request);
 
         return optionRepository.save(option);
     }
 
+    @Transactional
     public void deleteItemOptionById(UUID id){
         if(!optionRepository.existsById(id))
             throw new RuntimeException("Item Option doesn't exist");
@@ -48,6 +51,7 @@ public class ItemOptionService {
         optionRepository.deleteById(id);
     }
 
+    @Transactional
     public ItemOption updateItemOption(UUID id,ItemOptionRegistrationRequest request){
         ItemOption itemOption=optionRepository.findById(id).orElseThrow(
                 ()->new RuntimeException("Item Option doesn't exist")
@@ -64,6 +68,8 @@ public class ItemOptionService {
         return optionRepository.save(itemOption);
 
     }
+
+    @Transactional(readOnly = true)
     public ItemOption getItemOptionById(UUID id){
         return optionRepository.findById(id).orElseThrow(()->
                 new RuntimeException("Item Option doesn't exist"));

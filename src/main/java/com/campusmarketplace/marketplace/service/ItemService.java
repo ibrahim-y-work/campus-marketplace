@@ -7,6 +7,7 @@ import com.campusmarketplace.marketplace.repository.ItemRepository;
 import com.campusmarketplace.marketplace.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -38,19 +39,21 @@ public class ItemService{
         return newItem;
 
     }
+    @Transactional
     public Item addItem(ItemRegistrationRequest request){
         Item item=convertDTOToItem(request);
 
         return itemRepository.save(item);
     }
 
+    @Transactional
     public void deleteItemById(UUID id){
         if(!itemRepository.existsById(id)){
             throw new RuntimeException("Item doesn't exist");
         }
         itemRepository.deleteById(id);
     }
-
+    @Transactional
     public Item updateItem(UUID id,ItemRegistrationRequest request){
         Item item=itemRepository.findById(id).orElseThrow(()->
                 new RuntimeException("Item doesn't exist"));
@@ -68,6 +71,7 @@ public class ItemService{
         return itemRepository.save(item);
     }
 
+    @Transactional(readOnly = true)
     public Item getItemById(UUID id){
         return itemRepository.findById(id).orElseThrow(()->
                 new RuntimeException("Item doesn't exist"));
